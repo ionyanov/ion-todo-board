@@ -6,8 +6,6 @@ KANBAN desk with 2 mode
 
 Inspired by https://github.com/KelvinQiu802/kanban-react.git
 
-## Live <a src="http://kanban.onyanov.net/">DEMO</a>
-
 ## Stack
 
 server
