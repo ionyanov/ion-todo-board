@@ -153,7 +153,7 @@ export default class Board {
 
     deleteCurEpic() {
         if (this._islocal) {
-            this.setTasks(this._tasks.filter(item => item.epic !== this.epics[this.curEpic]));
+            this.setTasks(this._tasks.filter(item => item.epicId !== this.epics[this.curEpic]));
             this.initEpics();
         } else {
             deleteEpic({id: this.curEpic}).then(e => {
