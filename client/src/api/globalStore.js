@@ -23,7 +23,7 @@ export const getTasksGlobal = async (epicId) => {
 
 export const getEpicsLocal = async (tasks) => {
     let res = [];
-    tasks?.map(task => { res.push(task.epic)});
+    tasks?.map(task => { res.push(task.epicId)});
     return [...new Set(res)]||[];
 }
 

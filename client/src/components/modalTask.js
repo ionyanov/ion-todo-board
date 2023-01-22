@@ -24,8 +24,7 @@ const ModalTask = ({show, onHide, task}) => {
                 board.setTasks( board.updTask(task) );
             }
             else {
-                //board.setTasks( board.addTask(vName, vDescription) );
-                board.addTask(vName, vDescription);
+                board.setTasks( board.addTask(vName, vDescription) );
                 setName("");
                 setDescription("");
             }

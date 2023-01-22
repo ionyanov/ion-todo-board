@@ -9,7 +9,7 @@ export default class Board {
         this._tasks = [];
         this._epics = [];
         this._curEpic = 0;
-        this._islocal = false;
+        this._islocal = true;
         this._islogin = false;
 
         makeAutoObservable(this);
@@ -19,7 +19,7 @@ export default class Board {
         if (this._islocal) {
             getTasksLocal().then(data => {
                 this.setTasks(data);
-                getEpicsLocal(data).then(data => this.setEpics(data));
+                getEpicsLocal(data).then( data => this.setEpics(data) );
             })
         } else {
             let res = [];
@@ -58,15 +58,15 @@ export default class Board {
     }
 
     get tasks() {
-        if (this.isLocal) {
-            return this._tasks.filter(item => item.epic === this.epics[this.curEpic]);
+        if (this._islocal) {
+            return this._tasks.filter(item => item.epicId === this.epics[this.curEpic]);
         } else {
             return this._tasks || [];
         }
     }
 
     addTask(name, description) {
-        if (this.isLocal) {
+        if (this._islocal) {
             this._tasks.push({
                 id: uuid(),
                 name: name,
@@ -91,7 +91,7 @@ export default class Board {
     }
 
     updTask(task) {
-        if (this.isLocal) {
+        if (this._islocal) {
             const index = this._tasks.findIndex((item) => item.id === task.id);
             this._tasks.splice(index, 1, task);
         } else {
@@ -105,7 +105,7 @@ export default class Board {
     }
 
     deleteTask(taskId) {
-        if (this.isLocal) {
+        if (this._islocal) {
             const index = this._tasks.findIndex((item) => item.id === taskId);
             this._tasks.splice(index, 1);
         } else {
@@ -117,7 +117,7 @@ export default class Board {
     }
 
     async setTaskState(taskId, state) {
-        if (this.isLocal) {
+        if (this._islocal) {
             let task = this._tasks.find(item => (item.id === taskId));
             if (task) {
                 task.state = state;
@@ -152,7 +152,7 @@ export default class Board {
     }
 
     deleteCurEpic() {
-        if (this.isLocal) {
+        if (this._islocal) {
             this.setTasks(this._tasks.filter(item => item.epic !== this.epics[this.curEpic]));
             this.initEpics();
         } else {
@@ -164,7 +164,7 @@ export default class Board {
 
     async setCurEpic(val) {
         this._curEpic = val;
-        if (!this.isLocal) {
+        if (!this._islocal) {
             await getTasksGlobal(val).then(data => {
                 this.setTasks(data)
             });

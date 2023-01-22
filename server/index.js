@@ -14,7 +14,7 @@ app.use(cors())
 app.use(express.json())
 app.use(express.static(path.resolve(__dirname, 'static')))
 
-app.use('/', router)
+app.use('/api', router)
 //must be last
 app.use(errorHandler)
 
