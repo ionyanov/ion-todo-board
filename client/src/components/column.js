@@ -1,20 +1,20 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Draggable, Droppable} from 'react-beautiful-dnd';
 import {Card} from "react-bootstrap";
-import {Context} from "../index";
 import {observer} from "mobx-react-lite";
 import TaskCard from "./taskCard";
+import {useBoard} from "../hoocks/useBoard";
 
-const Column = observer(({ tag }) => {
-    const {board} = useContext(Context);
+const Column = observer(({tag}) => {
+    const {board} = useBoard();
     const [tasks, setTasks] = useState([])
 
     useEffect(() => {
         setTasks(board.tasks.filter(item => item.state === tag));
-    },[board.curEpic, board.tasks])
+    }, [board.tasks])
 
     const handleRemoveTask = (tid) => {
-        if(window.confirm("Are you sure want delete task?")){
+        if (window.confirm("Are you sure want delete task?")) {
             board.setTasks(board.deleteTask(tid));
         }
     }
@@ -28,10 +28,10 @@ const Column = observer(({ tag }) => {
                         return (
                             <div
                                 ref={provided.innerRef}
-                                style={{ backgroundColor: snapshot.isDraggingOver ? 'lightgray' : 'inherit'}}
+                                style={{backgroundColor: snapshot.isDraggingOver ? 'lightgray' : 'inherit'}}
                                 {...provided.droppableProps}
                             >
-                                {tasks.map( (task, index) => (
+                                {tasks.map((task, index) => (
                                     <Draggable
                                         key={task.name}
                                         draggableId={task.id.toString()}

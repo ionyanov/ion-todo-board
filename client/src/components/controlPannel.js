@@ -1,14 +1,13 @@
-import React, {useContext, useRef} from 'react';
+import React, {useRef} from 'react';
 import {Button, Form} from "react-bootstrap";
 import Accordion from "react-bootstrap/Accordion";
-import {Context} from "../index";
-import {login, logout} from "../api/userAPI";
 import {observer} from "mobx-react-lite";
+import {useBoard} from "../hoocks/useBoard";
+import SourcePanel from "./sourcePanel";
 
 const ControlPanel = observer(() => {
-    const {board} = useContext(Context);
+    const {board} = useBoard();
     const newEpic = useRef('');
-    const vPassword = useRef('');
 
     const handleAddEpic = () => {
         if (newEpic.current.value) {
@@ -18,55 +17,12 @@ const ControlPanel = observer(() => {
         }
     }
 
-    const handleLogin = () => {
-        try {
-            login(vPassword.current.value).then(data => {
-                board.setIsLogin(true);
-            }).catch(e => {
-                alert(e.response.data.message)
-            });
-        } catch (e) {
-            alert(e.response.data.message)
-        }
-    }
-
-    const handleLogout = () => {
-        try {
-            logout().then(data => {
-                board.setIsLogin(false);
-            }).catch(e => {
-                alert(e.response.data.message)
-            });
-        } catch (e) {
-            alert(e.response.data.message)
-        }
-    }
-
     return (
         <Accordion defaultActiveKey="-1">
             <Accordion.Item eventKey="-1">
                 <Accordion.Header>TASKBoard from Ilya Onyanov</Accordion.Header>
                 <Accordion.Body>
-                    {board.isLogin ?
-                        <div className="d-flex">
-                            <Form.Check
-                                checked={board.islocal}
-                                type="switch"
-                                className="w-100"
-                                onChange={e => board.setIsLocal(e.target.checked)}
-                                label="Use local storage"/>
-                            <Button className="mx-3 form-control" onClick={handleLogout}>Synchronise</Button>
-                            <Button className="mx-3 form-control" onClick={handleLogout}>Logout</Button>
-                        </div>
-                        :
-                        <div className="d-flex">
-                            <Form.Control
-                                ref={vPassword}
-                                type="text"
-                                placeholder="Enter password"/>
-                            <Button className="mx-3" onClick={handleLogin}>login</Button>
-                        </div>
-                    }
+                    <SourcePanel/>
                 </Accordion.Body>
             </Accordion.Item>
             <Accordion.Item eventKey="-1">

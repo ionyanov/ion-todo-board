@@ -1,30 +1,29 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Modal from "react-bootstrap/Modal";
 import {Button, Form} from "react-bootstrap";
-import {Context} from "../index";
+import {useBoard} from "../hoocks/useBoard";
 
 const ModalTask = ({show, onHide, task}) => {
-    const {board} = useContext(Context);
+    const {board} = useBoard();
 
     const [vName, setName] = useState('');
     const [vDescription, setDescription] = useState('');
 
     useEffect(() => {
-        if(task){
+        if (task) {
             setName(task.name);
             setDescription(task.description);
         }
-    },[]);
+    }, []);
 
     const saveTask = () => {
-        if(vName){
-            if(task) {
+        if (vName) {
+            if (task) {
                 task.name = vName;
                 task.description = vDescription;
-                board.setTasks( board.updTask(task) );
-            }
-            else {
-                board.setTasks( board.addTask(vName, vDescription) );
+                board.setTasks(board.updTask(task));
+            } else {
+                board.setTasks(board.addTask(vName, vDescription));
                 setName("");
                 setDescription("");
             }

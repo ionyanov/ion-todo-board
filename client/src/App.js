@@ -1,36 +1,16 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import Accordion from 'react-bootstrap/Accordion';
 import AccordionItem from "react-bootstrap/AccordionItem";
 import {observer} from "mobx-react-lite";
-import {Context} from "./index";
 import ControlPanel from "./components/controlPannel";
-import {check} from "./api/userAPI";
 import ModalTask from "./components/modalTask";
 import {DragDropContext} from "react-beautiful-dnd";
 import Column from "./components/column";
+import {useBoard} from "./hoocks/useBoard";
 
 const App = observer(() => {
-    const {board} = useContext(Context);
+    const {board} = useBoard();
     const [modalVisible, setModalVisible] = useState(false)
-
-    useEffect(() => {
-        check().then(data => {
-            board.setIsLogin(true);
-        }).finally(() => {
-            board.initEpics().then(() => {
-            });
-        });
-    }, [])
-
-    useEffect(() => {
-        async function fetchData() {
-            board.initEpics().then(() => {
-            });
-        }
-
-        fetchData().then(() => {
-        });
-    }, [board.isLocal, board.isLogin])
 
     const handleRemove = () => {
         if (window.confirm('Are you really want to remove epic?')) {
@@ -46,9 +26,11 @@ const App = observer(() => {
     return (
         <>
             <ControlPanel/>
-            <Accordion activeKey={board.curEpic} onSelect={(event) => {
-                board.setCurEpic(event)
-            }}>
+            <ModalTask show={modalVisible} onHide={() => setModalVisible(false)}/>
+            <Accordion activeKey={board.curEpic}
+                       onSelect={(event) => {
+                           board.setCurEpic(event)
+                       }}>
                 {board.epics?.map((epic, index) => {
                     if (epic) {
                         return <AccordionItem eventKey={index} key={index}>
@@ -62,7 +44,6 @@ const App = observer(() => {
                                             onClick={handleRemove}>Remove epic
                                     </button>
                                 </div>
-                                <ModalTask show={modalVisible} onHide={() => setModalVisible(false)}/>
                                 <DragDropContext onDragEnd={(result) => handleDragEnd(result)}>
                                     <div className='d-flex'>
                                         {board.statuses.map(tag => (
