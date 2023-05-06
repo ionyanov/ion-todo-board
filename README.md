@@ -50,7 +50,7 @@ TOKEN_DURATION=24h
 ### Client
 1. Go to the client directory
 ```bash
-  cd my-project
+  cd client
 ```
 2. Install dependencies
 ```bash
