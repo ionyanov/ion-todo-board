@@ -33,6 +33,7 @@ DB_PORT=
 ADMIN_PASS=password
 SECRET_KEY=superPASSWORDkey
 TOKEN_DURATION=24h
+API_URL=/api
 
 2. Go to the server directory
 ```bash
