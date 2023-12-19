@@ -1,0 +1,52 @@
+version: '3.8'
+
+networks:
+  default:
+
+services:
+
+  db:
+    container_name:  db
+    image: mysql:5.7
+    # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
+    # (this is just an example, not intended to be a production configuration)
+    command: --default-authentication-plugin=mysql_native_password
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: tododesc
+      MYSQL_ROOT_PASSWORD: tododesc
+      MYSQL_USER: tododesc
+      MYSQL_PASSWORD: tododesc
+    ports:
+      - 3306:3306
+    networks:
+      - default
+    volumes:
+      - ./dockerdb:/var/lib/mysql
+
+  server:
+    container_name: tododesc-server
+    depends_on:
+      - db
+    restart: unless-stopped
+    build: ./server/
+    command: npm run dev
+    ports:
+      - 5000:5000
+    links:
+      - db
+    stdin_open: true
+    networks:
+      - default
+
+  client:
+    container_name: tododesc-client
+    restart: unless-stopped
+    build: ./client/
+    ports:
+      - 3000:3000
+    networks:
+      - default
+
+volumes:
+  dockerdb:

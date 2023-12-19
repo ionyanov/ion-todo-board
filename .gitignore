@@ -9,6 +9,7 @@
 
 # misc
 .env
+dockerdb
 
 npm-debug.log*
 .idea
